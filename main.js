@@ -83,3 +83,12 @@ function sortList() {
     displayList(); // re-display the list after sorting
   }
   
+  function filterList(house) {
+    let filteredStudents = students.filter(student => student.house === house);
+    displayList(filteredStudents); // re-display the list after filtering
+  }
+  function searchList(query) {
+    let searchedStudents = students.filter(student => student.firstName.includes(query) || student.lastName.includes(query));
+    displayList(searchedStudents); // re-display the list after search
+  }
+  
