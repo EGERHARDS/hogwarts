@@ -78,3 +78,8 @@ function displayList() {
     document.querySelector("#student-list").appendChild(li);
   });
 }
+function sortList() {
+    students.sort((a, b) => a.firstName.localeCompare(b.firstName));
+    displayList(); // re-display the list after sorting
+  }
+  
