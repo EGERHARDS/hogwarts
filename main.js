@@ -72,6 +72,7 @@ function capitalize(str) {
 }
 
 function displayList() {
+  students = students.filter(student => !student.isExpelled);
   students.forEach((student) => {
     let li = document.createElement("li");
     li.textContent = `${student.firstName} ${student.lastName}`;
@@ -229,6 +230,32 @@ document.querySelector("#searchInput").addEventListener("input", (event) => {
 
 function showStudentDetails(student) {
   // TODO: Fill in the details based on the student object
+  const expelButton = document.createElement("button");
+  expelButton.textContent = "Expel";
+  expelButton.addEventListener("click", () => {
+      student.isExpelled = true;
+      // Refresh the list to hide expelled students
+      displayList(allStudents.filter(student => !student.isExpelled));
+  const prefectButton = document.createElement("button");
+    prefectButton.textContent = "Make Prefect";
+    prefectButton.addEventListener("click", () => {
+        const prefectsInSameHouse = allStudents.filter(otherStudent => otherStudent.isPrefect && otherStudent.house === student.house);
+        if (prefectsInSameHouse.length < 2) {
+            student.isPrefect = true;
+            prefectButton.textContent = "Remove Prefect";
+        } else {
+            alert("There are already two prefects in this house.");
+        }
+    });
+
+    // Append the button to the details popup
+    popupElement.appendChild(prefectButton);
+}
+  );
+
+  // Append the button to the details popup
+  // Replace 'popupElement' with the actual variable name for your popup element
+  popupElement.appendChild(expelButton);
 }
 
 studentElement.addEventListener("click", () => showStudentDetails(student));
