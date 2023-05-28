@@ -79,16 +79,101 @@ function displayList() {
   });
 }
 function sortList() {
-    students.sort((a, b) => a.firstName.localeCompare(b.firstName));
-    displayList(); // re-display the list after sorting
+  students.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  displayList(); // re-display the list after sorting
+}
+
+function filterList(house) {
+  let filteredStudents = students.filter((student) => student.house === house);
+  displayList(filteredStudents); // re-display the list after filtering
+}
+function searchList(query) {
+  let searchedStudents = students.filter(
+    (student) =>
+      student.firstName.includes(query) || student.lastName.includes(query)
+  );
+  displayList(searchedStudents); // re-display the list after search
+}
+function displayPopup(student) {
+  // create and display a popup with student details
+}
+function expelStudent(student) {
+  let index = students.indexOf(student);
+  students.splice(index, 1);
+  expelledStudents.push(student);
+  displayList(); // re-display the list after expelling a student
+}
+
+function makePrefect(student) {
+  let prefectsInHouse = students.filter(
+    (s) => s.house === student.house && s.isPrefect
+  );
+  if (prefectsInHouse.length < 2) {
+    student.isPrefect = true;
+  } else {
+    // handle the case when there are already two prefects
   }
-  
-  function filterList(house) {
-    let filteredStudents = students.filter(student => student.house === house);
-    displayList(filteredStudents); // re-display the list after filtering
+  displayList(); // re-display the list after making a student prefect
+}
+fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+  .then((response) => response.json())
+  .then((data) => handleBloodData(data));
+
+function handleBloodData(bloodData) {
+  // assign blood status to each student
+}
+function assignBloodStatus(student, bloodData) {
+  if (bloodData.pure.includes(student.lastName)) {
+    student.bloodStatus = "pure";
+  } else if (bloodData.half.includes(student.lastName)) {
+    student.bloodStatus = "half";
+  } else {
+    student.bloodStatus = "muggle";
   }
-  function searchList(query) {
-    let searchedStudents = students.filter(student => student.firstName.includes(query) || student.lastName.includes(query));
-    displayList(searchedStudents); // re-display the list after search
+}
+function addToInquisitorialSquad(student) {
+  if (student.bloodStatus === "pure" || student.house === "Slytherin") {
+    student.inInquisitorialSquad = true;
   }
-  
+  displayList();
+}
+function hackTheSystem() {
+  if (!systemHacked) {
+    systemHacked = true; // a global variable to prevent multiple hacks
+    injectSelf();
+    corruptBloodStatus();
+    temporaryInquisitorialSquad();
+  }
+}
+function injectSelf() {
+  let hacker = {
+    firstName: "Your",
+    lastName: "Name",
+    // add other necessary properties
+  };
+  students.push(hacker);
+  displayList(); // re-display the list after adding yourself
+}
+function corruptBloodStatus() {
+  students.forEach((student) => {
+    if (student.bloodStatus === "pure") {
+      // randomize blood status
+      let statuses = ["pure", "half", "muggle"];
+      student.bloodStatus =
+        statuses[Math.floor(Math.random() * statuses.length)];
+    } else {
+      student.bloodStatus = "pure";
+    }
+  });
+  displayList(); // re-display the list after corrupting blood statuses
+}
+function temporaryInquisitorialSquad() {
+  setInterval(() => {
+    students.forEach((student) => {
+      if (student.inInquisitorialSquad) {
+        student.inInquisitorialSquad = false;
+      }
+    });
+    displayList(); // re-display the list after removing all students from Inquisitorial Squad
+  }, 5000); // change students' Inquisitorial Squad status every 5 seconds
+}

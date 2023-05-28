@@ -1,12 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Hogwarts Studentlist</title>
-</head>
-<body>
-    <script src="main.js"></script>
-</body>
+  </head>
+  <body>
+    <header>
+      <h1>Hogwarts Studentlist</h1>
+    </header>
+    <main>
+      <div class="sidebar">
+        <h2>Filters</h2>
+        <!-- House filter -->
+        <label for="house-filter">Filter by House:</label>
+        <select id="house-filter">
+          <option value="">All Houses</option>
+          <option value="Gryffindor">Gryffindor</option>
+          <option value="Hufflepuff">Hufflepuff</option>
+          <option value="Ravenclaw">Ravenclaw</option>
+          <option value="Slytherin">Slytherin</option>
+        </select>
+        <!-- Responsibilities filter -->
+        <label for="responsibilities-filter">Filter by Responsibilities:</label>
+        <select id="responsibilities-filter">
+          <option value="">All Responsibilities</option>
+          <option value="Quidditch">Quidditch Players</option>
+          <option value="Prefect">Prefects</option>
+          <option value="ClubMember">Club Members</option>
+        </select>
+        <!-- Expelled filter -->
+        <input type="checkbox" id="expelled-filter" />
+        <label for="expelled-filter">Show Expelled Students</label>
+      </div>
+      <div class="content">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search by name..."
+          />
+        </div>
+        <div class="student-list">
+          <ul id="student-list"></ul>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <p>Number of students in each house: <span id="house-counts"></span></p>
+      <p>Total number of students: <span id="total-count"></span></p>
+      <p>Number of students expelled: <span id="expelled-count"></span></p>
+      <p>
+        Number of students currently displayed:
+        <span id="displayed-count"></span>
+      </p>
+    </footer>
+    <script src="main1.js"></script>
+  </body>
 </html>
