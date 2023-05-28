@@ -217,4 +217,20 @@ document.querySelector("#filter").addEventListener("change", (event) => {
   displayList(filteredStudents);
 });
 
+function searchStudent(query) {
+  return allStudents.filter(student => student.firstName.toLowerCase().includes(query.toLowerCase()) || student.lastName.toLowerCase().includes(query.toLowerCase()));
+}
+
+document.querySelector("#searchInput").addEventListener("input", (event) => {
+  const query = event.target.value;
+  const searchResults = searchStudent(query);
+  displayList(searchResults);
+});
+
+function showStudentDetails(student) {
+  // TODO: Fill in the details based on the student object
+}
+
+studentElement.addEventListener("click", () => showStudentDetails(student));
+
 
