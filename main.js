@@ -177,3 +177,44 @@ function temporaryInquisitorialSquad() {
     displayList(); // re-display the list after removing all students from Inquisitorial Squad
   }, 5000); // change students' Inquisitorial Squad status every 5 seconds
 }
+
+function sortByFirstName(a, b) {
+  if (a.firstName < b.firstName) {
+      return -1;
+  } else if (a.firstName > b.firstName) {
+      return 1;
+  } else {
+      return 0;
+  }
+}
+document.querySelector("#sortButton").addEventListener("click", () => {
+  allStudents.sort(sortByFirstName);
+  displayList(allStudents);
+});
+
+function sortByLastName(a, b) {
+  if (a.lastName < b.lastName) {
+      return -1;
+  } else if (a.lastName > b.lastName) {
+      return 1;
+  } else {
+      return 0;
+  }
+}
+
+document.querySelector("#sortButton").addEventListener("click", () => {
+  allStudents.sort(sortByLastName);
+  displayList(allStudents);
+});
+
+function filterByHouse(house) {
+  return allStudents.filter(student => student.house === house);
+}
+
+document.querySelector("#filter").addEventListener("change", (event) => {
+  const house = event.target.value;
+  const filteredStudents = filterByHouse(house);
+  displayList(filteredStudents);
+});
+
+
