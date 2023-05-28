@@ -259,6 +259,11 @@ function showStudentDetails(student) {
             alert("Only pure-blood students or students from Slytherin can join the Inquisitorial Squad.");
         }
     });
+    const expelButton = document.createElement("button");
+    expelButton.textContent = "Expel";
+    expelButton.addEventListener("click", function() {
+        expelStudent(student);
+    });
 
 
     // Append the button to the details popup
@@ -271,6 +276,7 @@ function showStudentDetails(student) {
   popupElement.appendChild(expelButton);
   popupElement.appendChild(bloodStatusElement);
   popupElement.appendChild(squadButton);
+  popupElement.appendChild(expelButton);
 }
 
 studentElement.addEventListener("click", () => showStudentDetails(student));
@@ -293,5 +299,22 @@ function determineBloodStatus(student) {
       student.bloodStatus = "Muggle";
   }
 }
+
+let expelledStudents = [];
+
+function expelStudent(student) {
+    // Remove the student from the students array
+    const index = students.indexOf(student);
+    if (index > -1) {
+        students.splice(index, 1);
+    }
+
+    // Add the student to the expelled students array
+    expelledStudents.push(student);
+
+    // Update the student list on the page
+    showStudents(students);
+}
+
 
 
