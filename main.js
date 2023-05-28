@@ -247,6 +247,19 @@ function showStudentDetails(student) {
             alert("There are already two prefects in this house.");
         }
     });
+    const bloodStatusElement = document.createElement("p");
+    bloodStatusElement.textContent = `Blood Status: ${student.bloodStatus}`;
+    const squadButton = document.createElement("button");
+    squadButton.textContent = student.isInSquad ? "Remove from Squad" : "Add to Squad";
+    squadButton.addEventListener("click", () => {
+        if (student.bloodStatus === "Pure-blood" || student.house === "Slytherin") {
+            student.isInSquad = !student.isInSquad;
+            squadButton.textContent = student.isInSquad ? "Remove from Squad" : "Add to Squad";
+        } else {
+            alert("Only pure-blood students or students from Slytherin can join the Inquisitorial Squad.");
+        }
+    });
+
 
     // Append the button to the details popup
     popupElement.appendChild(prefectButton);
@@ -256,8 +269,29 @@ function showStudentDetails(student) {
   // Append the button to the details popup
   // Replace 'popupElement' with the actual variable name for your popup element
   popupElement.appendChild(expelButton);
+  popupElement.appendChild(bloodStatusElement);
+  popupElement.appendChild(squadButton);
 }
 
 studentElement.addEventListener("click", () => showStudentDetails(student));
+
+let families;
+
+fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+.then(response => response.json())
+.then(data => {
+    families = data;
+    allStudents.forEach(determineBloodStatus);
+});
+
+function determineBloodStatus(student) {
+  if (families.pure.includes(student.lastName)) {
+      student.bloodStatus = "Pure-blood";
+  } else if (families.half.includes(student.lastName)) {
+      student.bloodStatus = "Half-blood";
+  } else {
+      student.bloodStatus = "Muggle";
+  }
+}
 
 
