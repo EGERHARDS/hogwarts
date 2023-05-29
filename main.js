@@ -8,8 +8,12 @@ class Student {
     this.nickName = nickName;
     this.image = image;
     this.house = house;
+    this.expelled = false;
+    this.prefect = false;
+    this.bloodStatus = "";
   }
 }
+
 fetch("https://petlatkea.dk/2021/hogwarts/students.json")
   .then((response) => response.json())
   .then((data) => processData(data))
@@ -72,7 +76,7 @@ function capitalize(str) {
 }
 
 function displayList() {
-  students = students.filter(student => !student.isExpelled);
+  students = students.filter((student) => !student.isExpelled);
   students.forEach((student) => {
     let li = document.createElement("li");
     li.textContent = `${student.firstName} ${student.lastName}`;
@@ -100,9 +104,12 @@ function displayPopup(student) {
 }
 function expelStudent(student) {
   let index = students.indexOf(student);
-  students.splice(index, 1);
-  expelledStudents.push(student);
-  displayList(); // re-display the list after expelling a student
+  if (index > -1) {
+    students.splice(index, 1);
+    student.isExpelled = true;
+    expelledStudents.push(student);
+    displayList();
+  } // re-display the list after expelling a student
 }
 
 function makePrefect(student) {
@@ -118,11 +125,10 @@ function makePrefect(student) {
 }
 fetch("https://petlatkea.dk/2021/hogwarts/families.json")
   .then((response) => response.json())
-  .then((data) => handleBloodData(data));
+  .then((data) => {
+    students.forEach((student) => assignBloodStatus(student, data));
+  });
 
-function handleBloodData(bloodData) {
-  // assign blood status to each student
-}
 function assignBloodStatus(student, bloodData) {
   if (bloodData.pure.includes(student.lastName)) {
     student.bloodStatus = "pure";
@@ -132,6 +138,7 @@ function assignBloodStatus(student, bloodData) {
     student.bloodStatus = "muggle";
   }
 }
+
 function addToInquisitorialSquad(student) {
   if (student.bloodStatus === "pure" || student.house === "Slytherin") {
     student.inInquisitorialSquad = true;
@@ -181,11 +188,11 @@ function temporaryInquisitorialSquad() {
 
 function sortByFirstName(a, b) {
   if (a.firstName < b.firstName) {
-      return -1;
+    return -1;
   } else if (a.firstName > b.firstName) {
-      return 1;
+    return 1;
   } else {
-      return 0;
+    return 0;
   }
 }
 document.querySelector("#sortButton").addEventListener("click", () => {
@@ -195,11 +202,11 @@ document.querySelector("#sortButton").addEventListener("click", () => {
 
 function sortByLastName(a, b) {
   if (a.lastName < b.lastName) {
-      return -1;
+    return -1;
   } else if (a.lastName > b.lastName) {
-      return 1;
+    return 1;
   } else {
-      return 0;
+    return 0;
   }
 }
 
@@ -209,7 +216,7 @@ document.querySelector("#sortButton").addEventListener("click", () => {
 });
 
 function filterByHouse(house) {
-  return allStudents.filter(student => student.house === house);
+  return allStudents.filter((student) => student.house === house);
 }
 
 document.querySelector("#filter").addEventListener("change", (event) => {
@@ -219,7 +226,11 @@ document.querySelector("#filter").addEventListener("change", (event) => {
 });
 
 function searchStudent(query) {
-  return allStudents.filter(student => student.firstName.toLowerCase().includes(query.toLowerCase()) || student.lastName.toLowerCase().includes(query.toLowerCase()));
+  return allStudents.filter(
+    (student) =>
+      student.firstName.toLowerCase().includes(query.toLowerCase()) ||
+      student.lastName.toLowerCase().includes(query.toLowerCase())
+  );
 }
 
 document.querySelector("#searchInput").addEventListener("input", (event) => {
@@ -233,43 +244,64 @@ function showStudentDetails(student) {
   const expelButton = document.createElement("button");
   expelButton.textContent = "Expel";
   expelButton.addEventListener("click", () => {
-      student.isExpelled = true;
-      // Refresh the list to hide expelled students
-      displayList(allStudents.filter(student => !student.isExpelled));
-  const prefectButton = document.createElement("button");
+    student.isExpelled = true;
+    // Refresh the list to hide expelled students
+    displayList(allStudents.filter((student) => !student.isExpelled));
+    const prefectButton = document.createElement("button");
     prefectButton.textContent = "Make Prefect";
     prefectButton.addEventListener("click", () => {
-        const prefectsInSameHouse = allStudents.filter(otherStudent => otherStudent.isPrefect && otherStudent.house === student.house);
-        if (prefectsInSameHouse.length < 2) {
-            student.isPrefect = true;
-            prefectButton.textContent = "Remove Prefect";
-        } else {
-            alert("There are already two prefects in this house.");
-        }
+      const prefectsInSameHouse = allStudents.filter(
+        (otherStudent) =>
+          otherStudent.isPrefect && otherStudent.house === student.house
+      );
+      if (prefectsInSameHouse.length < 2) {
+        student.isPrefect = true;
+        prefectButton.textContent = "Remove Prefect";
+      } else {
+        alert("There are already two prefects in this house.");
+      }
     });
     const bloodStatusElement = document.createElement("p");
     bloodStatusElement.textContent = `Blood Status: ${student.bloodStatus}`;
     const squadButton = document.createElement("button");
-    squadButton.textContent = student.isInSquad ? "Remove from Squad" : "Add to Squad";
+    squadButton.textContent = student.isInSquad
+      ? "Remove from Squad"
+      : "Add to Squad";
     squadButton.addEventListener("click", () => {
-        if (student.bloodStatus === "Pure-blood" || student.house === "Slytherin") {
-            student.isInSquad = !student.isInSquad;
-            squadButton.textContent = student.isInSquad ? "Remove from Squad" : "Add to Squad";
-        } else {
-            alert("Only pure-blood students or students from Slytherin can join the Inquisitorial Squad.");
-        }
+      if (
+        student.bloodStatus === "Pure-blood" ||
+        student.house === "Slytherin"
+      ) {
+        student.isInSquad = !student.isInSquad;
+        squadButton.textContent = student.isInSquad
+          ? "Remove from Squad"
+          : "Add to Squad";
+      } else {
+        alert(
+          "Only pure-blood students or students from Slytherin can join the Inquisitorial Squad."
+        );
+      }
     });
     const expelButton = document.createElement("button");
     expelButton.textContent = "Expel";
-    expelButton.addEventListener("click", function() {
-        expelStudent(student);
+    expelButton.addEventListener("click", function () {
+      expelStudent(student);
     });
+    const expelledStatusElement = document.createElement("p");
+    expelledStatusElement.textContent = `Expelled: ${
+      student.isExpelled ? "Yes" : "No"
+    }`;
 
+    const prefectStatusElement = document.createElement("p");
+    prefectStatusElement.textContent = `Prefect: ${
+      student.isPrefect ? "Yes" : "No"
+    }`;
 
     // Append the button to the details popup
     popupElement.appendChild(prefectButton);
-}
-  );
+    popupElement.appendChild(expelledStatusElement);
+    popupElement.appendChild(prefectStatusElement);
+  });
 
   // Append the button to the details popup
   // Replace 'popupElement' with the actual variable name for your popup element
@@ -284,37 +316,34 @@ studentElement.addEventListener("click", () => showStudentDetails(student));
 let families;
 
 fetch("https://petlatkea.dk/2021/hogwarts/families.json")
-.then(response => response.json())
-.then(data => {
+  .then((response) => response.json())
+  .then((data) => {
     families = data;
     allStudents.forEach(determineBloodStatus);
-});
+  });
 
 function determineBloodStatus(student) {
   if (families.pure.includes(student.lastName)) {
-      student.bloodStatus = "Pure-blood";
+    student.bloodStatus = "Pure-blood";
   } else if (families.half.includes(student.lastName)) {
-      student.bloodStatus = "Half-blood";
+    student.bloodStatus = "Half-blood";
   } else {
-      student.bloodStatus = "Muggle";
+    student.bloodStatus = "Muggle";
   }
 }
 
 let expelledStudents = [];
 
 function expelStudent(student) {
-    // Remove the student from the students array
-    const index = students.indexOf(student);
-    if (index > -1) {
-        students.splice(index, 1);
-    }
+  // Remove the student from the students array
+  const index = students.indexOf(student);
+  if (index > -1) {
+    students.splice(index, 1);
+  }
 
-    // Add the student to the expelled students array
-    expelledStudents.push(student);
+  // Add the student to the expelled students array
+  expelledStudents.push(student);
 
-    // Update the student list on the page
-    showStudents(students);
+  // Update the student list on the page
+  showStudents(students);
 }
-
-
-
