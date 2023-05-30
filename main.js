@@ -1,23 +1,6 @@
 "use strict";
-
-class Student {
-  constructor(firstName, lastName, middleName, nickName, image, house) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.middleName = middleName;
-    this.nickName = nickName;
-    this.image = image;
-    this.house = house;
-    this.expelled = false;
-    this.prefect = false;
-    this.bloodStatus = "";
-  }
-}
-
-fetch("https://petlatkea.dk/2021/hogwarts/students.json")
-  .then((response) => response.json())
-  .then((data) => processData(data))
-  .catch((error) => console.error("Error:", error));
+import { Student } from './student.js';
+import { fetchStudents } from './fetching.js';
 
 function processData(data) {
   let students = [];
@@ -53,7 +36,6 @@ function processData(data) {
       .toLowerCase()
       .charAt(0)}.png`;
 
-    // Create a new student object
     let student = new Student(
       firstName,
       lastName,
@@ -62,13 +44,12 @@ function processData(data) {
       image,
       house
     );
-
-    // Add the new student object to the array
     students.push(student);
   });
 
   // Display the cleaned data
   console.table(students);
+  displayList();
 }
 
 function capitalize(str) {
@@ -123,7 +104,7 @@ function makePrefect(student) {
   }
   displayList(); // re-display the list after making a student prefect
 }
-fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+fetchStudents()
   .then((response) => response.json())
   .then((data) => {
     students.forEach((student) => assignBloodStatus(student, data));
@@ -240,82 +221,93 @@ document.querySelector("#searchInput").addEventListener("input", (event) => {
 });
 
 function showStudentDetails(student) {
-  // TODO: Fill in the details based on the student object
+  // Clear the popup
+  while (popupElement.firstChild) {
+    popupElement.removeChild(popupElement.firstChild);
+  }
+
+  // Full Name
+  const nameElement = document.createElement("p");
+  nameElement.textContent = `Full Name: ${student.firstName} ${student.lastName}`;
+  popupElement.appendChild(nameElement);
+
+  // House
+  const houseElement = document.createElement("p");
+  houseElement.textContent = `House: ${student.house}`;
+  popupElement.appendChild(houseElement);
+
+  // Blood Status
+  const bloodStatusElement = document.createElement("p");
+  bloodStatusElement.textContent = `Blood Status: ${student.bloodStatus}`;
+  popupElement.appendChild(bloodStatusElement);
+
+  // Expelled Status
+  const expelledStatusElement = document.createElement("p");
+  expelledStatusElement.textContent = `Expelled: ${student.isExpelled ? "Yes" : "No"}`;
+  popupElement.appendChild(expelledStatusElement);
+
+  // Prefect Status
+  const prefectStatusElement = document.createElement("p");
+  prefectStatusElement.textContent = `Prefect: ${student.isPrefect ? "Yes" : "No"}`;
+  popupElement.appendChild(prefectStatusElement);
+
+  // Expel Button
   const expelButton = document.createElement("button");
   expelButton.textContent = "Expel";
   expelButton.addEventListener("click", () => {
     student.isExpelled = true;
     // Refresh the list to hide expelled students
     displayList(allStudents.filter((student) => !student.isExpelled));
-    const prefectButton = document.createElement("button");
-    prefectButton.textContent = "Make Prefect";
-    prefectButton.addEventListener("click", () => {
-      const prefectsInSameHouse = allStudents.filter(
-        (otherStudent) =>
-          otherStudent.isPrefect && otherStudent.house === student.house
-      );
-      if (prefectsInSameHouse.length < 2) {
-        student.isPrefect = true;
-        prefectButton.textContent = "Remove Prefect";
-      } else {
-        alert("There are already two prefects in this house.");
-      }
-    });
-    const bloodStatusElement = document.createElement("p");
-    bloodStatusElement.textContent = `Blood Status: ${student.bloodStatus}`;
-    const squadButton = document.createElement("button");
-    squadButton.textContent = student.isInSquad
-      ? "Remove from Squad"
-      : "Add to Squad";
-    squadButton.addEventListener("click", () => {
-      if (
-        student.bloodStatus === "Pure-blood" ||
-        student.house === "Slytherin"
-      ) {
-        student.isInSquad = !student.isInSquad;
-        squadButton.textContent = student.isInSquad
-          ? "Remove from Squad"
-          : "Add to Squad";
-      } else {
-        alert(
-          "Only pure-blood students or students from Slytherin can join the Inquisitorial Squad."
-        );
-      }
-    });
-    const expelButton = document.createElement("button");
-    expelButton.textContent = "Expel";
-    expelButton.addEventListener("click", function () {
-      expelStudent(student);
-    });
-    const expelledStatusElement = document.createElement("p");
-    expelledStatusElement.textContent = `Expelled: ${
-      student.isExpelled ? "Yes" : "No"
-    }`;
-
-    const prefectStatusElement = document.createElement("p");
-    prefectStatusElement.textContent = `Prefect: ${
-      student.isPrefect ? "Yes" : "No"
-    }`;
-
-    // Append the button to the details popup
-    popupElement.appendChild(prefectButton);
-    popupElement.appendChild(expelledStatusElement);
-    popupElement.appendChild(prefectStatusElement);
+    // Refresh the details to show updated expelled status
+    showStudentDetails(student);
   });
+  popupElement.appendChild(expelButton);
 
-  // Append the button to the details popup
-  // Replace 'popupElement' with the actual variable name for your popup element
-  popupElement.appendChild(expelButton);
-  popupElement.appendChild(bloodStatusElement);
+  // Prefect Button
+  const prefectButton = document.createElement("button");
+  prefectButton.textContent = student.isPrefect ? "Remove Prefect" : "Make Prefect";
+  prefectButton.addEventListener("click", () => {
+    const prefectsInSameHouse = allStudents.filter(
+      (otherStudent) =>
+        otherStudent.isPrefect && otherStudent.house === student.house
+    );
+    if (prefectsInSameHouse.length < 2 || student.isPrefect) {
+      student.isPrefect = !student.isPrefect;
+      prefectButton.textContent = student.isPrefect ? "Remove Prefect" : "Make Prefect";
+      // Refresh the details to show updated prefect status
+      showStudentDetails(student);
+    } else {
+      alert("There are already two prefects in this house.");
+    }
+  });
+  popupElement.appendChild(prefectButton);
+
+  // Inquisitorial Squad Button
+  const squadButton = document.createElement("button");
+  squadButton.textContent = student.isInSquad ? "Remove from Squad" : "Add to Squad";
+  squadButton.addEventListener("click", () => {
+    if (
+      student.bloodStatus === "Pure-blood" ||
+      student.house === "Slytherin"
+    ) {
+      student.isInSquad = !student.isInSquad;
+      squadButton.textContent = student.isInSquad ? "Remove from Squad" : "Add to Squad";
+      // Refresh the details to show updated squad status
+      showStudentDetails(student);
+    } else {
+      alert(
+        "Only pure-blood students or students from Slytherin can join the Inquisitorial Squad."
+      );
+    }
+  });
   popupElement.appendChild(squadButton);
-  popupElement.appendChild(expelButton);
 }
 
 studentElement.addEventListener("click", () => showStudentDetails(student));
 
 let families;
 
-fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+fetchStudents()
   .then((response) => response.json())
   .then((data) => {
     families = data;
@@ -347,3 +339,9 @@ function expelStudent(student) {
   // Update the student list on the page
   showStudents(students);
 }
+document.querySelectorAll(".student").forEach((studentElement) => {
+  studentElement.addEventListener("click", (event) => {
+    let student = /* Here you should find the corresponding student object in your students array based on clicked element */;
+    showStudentDetails(student);
+  });
+});

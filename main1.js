@@ -1,12 +1,13 @@
 "use strict";
+import { fetchStudents } from './fetching.js';
+
 let students = []; // Global array to store student data
 let expelledStudents = []; // Global array to store expelled student data
 
 // Fetch and clean the data
 async function fetchData() {
   try {
-    const response = await fetch(
-      "https://petlatkea.dk/2021/hogwarts/students.json"
+    const response = await fetchStudents(
     );
     const data = await response.json();
     cleanData(data);

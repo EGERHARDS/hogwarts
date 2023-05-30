@@ -15,48 +15,68 @@
       <div class="sidebar">
         <h2>Filters</h2>
         <!-- House filter -->
-        <label for="house-filter">Filter by House:</label>
-        <select id="house-filter">
-          <option value="">All Houses</option>
-          <option value="Gryffindor">Gryffindor</option>
-          <option value="Hufflepuff">Hufflepuff</option>
-          <option value="Ravenclaw">Ravenclaw</option>
-          <option value="Slytherin">Slytherin</option>
-        </select>
-        <!-- Responsibilities filter -->
-        <label for="responsibilities-filter">Filter by Responsibilities:</label>
-        <select id="responsibilities-filter">
-          <option value="">All Responsibilities</option>
-          <option value="Quidditch">Quidditch Players</option>
-          <option value="Prefect">Prefects</option>
-          <option value="ClubMember">Club Members</option>
-        </select>
-        <!-- Expelled filter -->
-        <input type="checkbox" id="expelled-filter" />
-        <label for="expelled-filter">Show Expelled Students</label>
+        <h3>Houses</h3>
+        <button class="filter" data-filter="gryffindor">Gryffindor</button>
+        <button class="filter" data-filter="hufflepuff">Hufflepuff</button>
+        <button class="filter" data-filter="ravenclaw">Ravenclaw</button>
+        <button class="filter" data-filter="slytherin">Slytherin</button>
+        
+        <!-- Roles filter -->
+        <h3>Roles</h3>
+        <button class="filter" data-filter="quidditch">Quidditch Players</button>
+        <button class="filter" data-filter="prefect">Prefects</button>
+        <button class="filter" data-filter="clubmember">Club Members</button>
+        
+        <!-- Status filter -->
+        <h3>Status</h3>
+        <button class="filter" data-filter="enrolled">Enrolled</button>
+        <button class="filter" data-filter="expelled">Expelled</button>
+    </div>
+       <!-- The student list -->
+<section id="students-list">
+  <!-- this is where the student entries will be added -->
+</section>
+
+<!-- Student template -->
+<template id="student-template">
+  <article class="student">
+      <img src="" alt="Student photo" class="student-photo">
+      <div class="student-info">
+          <h3 class="student-name">Student Name</h3>
+          <p class="student-house">House: <span></span></p>
+          <p class="student-status">Status: <span></span></p>
+          <p class="student-role">Role: <span></span></p>
       </div>
-      <div class="content">
-        <div class="search-bar">
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Search by name..."
-          />
-        </div>
-        <div class="student-list">
-          <ul id="student-list"></ul>
+  </article>
+</template>
+          </ul>
         </div>
       </div>
     </main>
     <footer>
-      <p>Number of students in each house: <span id="house-counts"></span></p>
-      <p>Total number of students: <span id="total-count"></span></p>
-      <p>Number of students expelled: <span id="expelled-count"></span></p>
-      <p>
-        Number of students currently displayed:
-        <span id="displayed-count"></span>
-      </p>
-    </footer>
-    <script src="main1.js"></script>
+      <div class="stats">
+          <div class="house-stats">
+              <h3>Gryffindor</h3>
+              <p><span id="gryffindor-count">0</span> students</p>
+          </div>
+          <div class="house-stats">
+            <h3>Slytherin</h3>
+            <p><span id="slytherin-count">0</span> students</p>
+        </div>
+        <div class="house-stats">
+          <h3>Ravenclaw</h3>
+          <p><span id="ravenclaw-count">0</span> students</p>
+      </div>
+      <div class="house-stats">
+        <h3>Hufflepuff</h3>
+        <p><span id="hufflepuff-count">0</span> students</p>
+    </div>
+          <div class="total-stats">
+              <p>Total Enrolled: <span id="enrolled-count">0</span></p>
+              <p>Total Expelled: <span id="expelled-count">0</span></p>
+          </div>
+      </div>
+    </footer>  
+    <script src="main.js"></script>
   </body>
 </html>
