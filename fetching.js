@@ -1,8 +1,13 @@
 "use strict"
 
 export function fetchStudents() {
-    fetch("https://petlatkea.dk/2021/hogwarts/students.json")
-      .then((response) => response.json())
-      .then((data) => processData(data))
+    return fetch("https://petlatkea.dk/2021/hogwarts/students.json")
+      .then(response => response.json())
       .catch((error) => console.error("Error:", error));
-    }
+}
+
+export function fetchFamilies() {
+    return fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+        .then(response => response.json())
+        .catch((error) => console.error("Error:", error));
+}

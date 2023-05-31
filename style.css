@@ -1,7 +1,7 @@
 :root {
-    --old-brown: #4b3b2a;
+    --kinda-white: #d8d6d5;
     --mln-pink: #b27dc5;
-    --white: #fdfdfd;
+    --gray: #3c3b3b;
     --dirty-white: #d1d1d1;
     --gryffindor: #bf1120;
     --slytherin: #29a649;
@@ -10,9 +10,9 @@
   }
   
   body {
-    background-color: var(--old-brown);
-    font-family: Arial, Helvetica, sans-serif;
-    color: var(--white);
+    background-color: var(--kinda-white);
+    font-family: 'Helvetica', sans-serif;
+    color: var(--gray);
     margin: 3rem;
   }
   
@@ -47,16 +47,16 @@
   }
   
   button.filter {
-    background-color: var(--old-brown);
-    border: solid 0.8px var(--dirty-white);
-    border-radius: 20px;
+    background-color: var(--kinda-white);
+    border: solid var(--gray);
+    border-width: 3px;
     padding: 8px 20px 8px 20px;
-    color: var(--white);
+    color: var(--gray);
   }
   
   button.filter:hover {
-    background-color: var(--dirty-white);
-    color: var(--old-brown);
+    background-color: var(--gray);
+    color: var(--kinda-white);
   }
 
   .button:hover {
@@ -74,7 +74,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 1rem 0.5rem 1rem;
-    border-radius: 1rem;
     transition: all 0.5s ease-in-out;
   }
   
@@ -120,9 +119,8 @@
   
   .stats p {
     background-color: var(--mln-pink);
-    color: var(--white);
+    color: var(--gray);
     border: none var(--mln-pink);
-    border-radius: 20px;
     padding: 10px 15px 10px 15px;
     margin: 0;
     width: 25%;

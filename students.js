@@ -10,6 +10,17 @@ export class Student {
       this.house = house;
       this.expelled = false;
       this.prefect = false;
+      this.role = "";
       this.bloodStatus = "";
     }
-  }
+
+    // Method to set blood status
+    setBloodStatus(families) {
+        // logic here to set the blood status based on families data
+    }
+
+    // Method to set role
+    setRole(role) {
+        this.role = role;
+    }
+}

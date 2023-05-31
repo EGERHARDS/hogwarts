@@ -31,11 +31,14 @@
         <h3>Status</h3>
         <button class="filter" data-filter="enrolled">Enrolled</button>
         <button class="filter" data-filter="expelled">Expelled</button>
+
+        <button id="sortButton">Sort</button>
+        <button id="filter">Filter</button>
+        <button id="expelButton">Expel</button>
+        <input type="search" id="searchInput">
+
     </div>
        <!-- The student list -->
-<section id="students-list">
-  <!-- this is where the student entries will be added -->
-</section>
 
 <!-- Student template -->
 <template id="student-template">
@@ -49,7 +52,6 @@
       </div>
   </article>
 </template>
-          </ul>
         </div>
       </div>
     </main>
@@ -76,7 +78,13 @@
               <p>Total Expelled: <span id="expelled-count">0</span></p>
           </div>
       </div>
+
+      <section id="student-list">
+        <!-- this is where the student entries will be added -->
+      </section>
     </footer>  
-    <script src="main.js"></script>
+    <script type="module" src="fetching.js"></script>
+    <script type="module" src="students.js"></script>
+    <script type="module" src="main.js"></script>
   </body>
 </html>
