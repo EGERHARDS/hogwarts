@@ -1,17 +1,14 @@
 "use strict"
 
 export class Student {
-    constructor(firstName, lastName, middleName, nickName, image, house) {
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.middleName = middleName;
-      this.nickName = nickName;
-      this.image = image;
-      this.house = house;
-      this.expelled = false;
-      this.prefect = false;
-      this.role = "";
-      this.bloodStatus = "";
+    constructor(studentData) {
+      this.firstName = studentData.firstName;
+      this.lastName = studentData.lastName;
+      this.middleName = studentData.middleName;
+      this.nickName = studentData.nickName;
+      this.photo = studentData.imageName;
+      this.house = studentData.house;
+      this.bloodStatus = studentData.bloodStatus;
     }
 
     // Method to set blood status
