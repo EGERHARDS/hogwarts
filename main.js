@@ -49,7 +49,7 @@ async function fetchData() {
       nickName: nickName !== '-' ? nickName : undefined,
       imageName,
       house: capitalizeHouse(studentData.house.trim()),
-      bloodStatus: getBloodStatus(studentData, families),
+      bloodStatus: getBloodStatus(nameParts.lastName, families), // Change this line
     });
 
     allStudents.push(student);
@@ -97,14 +97,11 @@ function createName(fullname) {
 }
 
 
-function getBloodStatus(student, familyData) {
-  const lastName = student.lastName;
-  console.log('Family data:', familyData);
-  console.log('Student last name:', lastName);
-
-  if (familyData.pure.includes(lastName)) {
+function getBloodStatus(lastName, familyData) {
+  lastName = lastName.toLowerCase();
+  if (familyData.pure.map(name => name.toLowerCase()).includes(lastName)) {
     return "Pure-blood";
-  } else if (familyData.half.includes(lastName)) {
+  } else if (familyData.half.map(name => name.toLowerCase()).includes(lastName)) {
     return "Half-blood";
   } else {
     return "Muggle";
