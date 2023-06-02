@@ -9,6 +9,7 @@ export class Student {
       this.photo = studentData.imageName;
       this.house = studentData.house;
       this.bloodStatus = studentData.bloodStatus;
+      this.isExpelled = false;
     }
 
     // Method to set blood status

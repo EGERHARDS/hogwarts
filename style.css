@@ -2,7 +2,6 @@
     --kinda-white: #d8d6d5;
     --mln-pink: #b27dc5;
     --gray: #3c3b3b;
-    --dirty-white: #d1d1d1;
     --gryffindor: #bf1120;
     --slytherin: #29a649;
     --hufflepuff: #f2be22;
@@ -11,7 +10,7 @@
   
   body {
     background-color: var(--kinda-white);
-    font-family: 'Helvetica', sans-serif;
+    font-family: sans-serif;
     color: var(--gray);
     margin: 3rem;
   }
@@ -122,8 +121,8 @@
     color: var(--gray);
     border: none var(--mln-pink);
     padding: 10px 15px 10px 15px;
-    margin: 0;
-    width: 25%;
+    margin: 0.5rem;
+    width: fit-content;
   }
   
   .modal {
@@ -192,4 +191,8 @@
     width: 10%;
     height: auto;
   }  
+
+  .student-row.expelled {
+    color: grey;
+  }
   
