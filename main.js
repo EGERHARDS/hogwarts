@@ -5,13 +5,15 @@ import { fetchStudents, fetchFamilies } from "./fetching.js";
 function capitalizeNameParts(names) {
   return names.map((name) => {
     if (!name || name === "-") {
-      return name; // return the name as is if it's empty or "-"
+      return name;
     }
-    
+
     return name
-      .split(' ')
-      .map((part) => part.charAt(0).toUpperCase() + part.substring(1).toLowerCase())
-      .join(' ');
+      .split(" ")
+      .map(
+        (part) => part.charAt(0).toUpperCase() + part.substring(1).toLowerCase()
+      )
+      .join(" ");
   });
 }
 
@@ -39,16 +41,16 @@ async function fetchData() {
     ]);
 
     const [firstName, middleName, nickName, lastName] = capitalizedNames;
-    const imageName = createImageName(lastName, firstName.charAt(0)); // create image name using the lastName and the first character of the firstName
+    const imageName = createImageName(lastName, firstName.charAt(0));
 
     const student = new Student({
       firstName,
       lastName,
-      middleName: middleName !== '-' ? middleName : undefined,
-      nickName: nickName !== '-' ? nickName : undefined,
+      middleName: middleName !== "-" ? middleName : undefined,
+      nickName: nickName !== "-" ? nickName : undefined,
       imageName,
       house: capitalizeHouse(studentData.house.trim()),
-      bloodStatus: getBloodStatus(nameParts.lastName, families), // Change this line
+      bloodStatus: getBloodStatus(nameParts.lastName, families),
     });
 
     allStudents.push(student);
@@ -62,7 +64,7 @@ async function fetchData() {
 }
 
 function createName(fullname) {
-  fullname = fullname.trim(); // Remove leading/trailing white space
+  fullname = fullname.trim(); // Remove white space
 
   let firstName = "";
   let lastName = "";
@@ -90,21 +92,27 @@ function createName(fullname) {
     middleName = middleNameParts.join(" ");
   }
 
-  const cleanedNameParts = capitalizeNameParts([firstName, middleName, lastName, nickName]);
+  const cleanedNameParts = capitalizeNameParts([
+    firstName,
+    middleName,
+    lastName,
+    nickName,
+  ]);
   firstName = cleanedNameParts[0];
   middleName = cleanedNameParts[1];
   lastName = cleanedNameParts[2];
   nickName = cleanedNameParts[3];
 
-  return { firstName, middleName, nickName, lastName }
+  return { firstName, middleName, nickName, lastName };
 }
-
 
 function getBloodStatus(lastName, familyData) {
   lastName = lastName.toLowerCase();
-  if (familyData.pure.map(name => name.toLowerCase()).includes(lastName)) {
+  if (familyData.pure.map((name) => name.toLowerCase()).includes(lastName)) {
     return "Pure-blood";
-  } else if (familyData.half.map(name => name.toLowerCase()).includes(lastName)) {
+  } else if (
+    familyData.half.map((name) => name.toLowerCase()).includes(lastName)
+  ) {
     return "Half-blood";
   } else {
     return "Muggle";
@@ -112,11 +120,11 @@ function getBloodStatus(lastName, familyData) {
 }
 
 function convertCamelCaseToRegular(str) {
-  // Split camel case string into words
-  const words = str.split(/(?=[A-Z])/).map(word => word.toLowerCase());
+  const words = str.split(/(?=[A-Z])/).map((word) => word.toLowerCase());
 
-  // Capitalize the first letter of each word and join them with spaces
-  return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function displayList(students) {
@@ -127,8 +135,8 @@ function displayList(students) {
   // Table header
   const headers = ["First Name", "Last Name", "House"];
   const tr = document.createElement("tr");
-tr.classList.add("student-row");
-  headers.forEach(header => {
+  tr.classList.add("student-row");
+  headers.forEach((header) => {
     const th = document.createElement("th");
     th.textContent = header;
     tr.appendChild(th);
@@ -137,65 +145,70 @@ tr.classList.add("student-row");
   table.appendChild(thead);
 
   // Table body
-  students.forEach(student => {
+  students.forEach((student) => {
     const tr = document.createElement("tr");
     tr.classList.add("student-row");
     if (student.isExpelled) {
-      tr.classList.add("expelled"); // add a class to style expelled students differently
+      tr.classList.add("expelled");
     }
     const data = [student.firstName, student.lastName, student.house];
-    data.forEach(datum => {
+    data.forEach((datum) => {
       const td = document.createElement("td");
       td.textContent = datum;
       tr.appendChild(td);
     });
-    tr.addEventListener("click", () => showStudentDetails(student)); // Adds an event listener to the row
+    tr.addEventListener("click", () => showStudentDetails(student));
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
 
-  // Clear the existing list before displaying
   const studentList = document.querySelector("#student-list");
   studentList.innerHTML = "";
   studentList.appendChild(table);
 }
 
-
-
 function showStudentDetails(student) {
   // Create modal element
-  const modal = document.createElement('div');
-  modal.classList.add('modal');
+  const modal = document.createElement("div");
+  modal.classList.add("modal");
 
   // Create modal content element
-  const modalContent = document.createElement('div');
-  modalContent.classList.add('modal-content');
+  const modalContent = document.createElement("div");
+  modalContent.classList.add("modal-content");
 
   // Add house colors and crest
-  const houseCrest = document.createElement('img');
+  const houseCrest = document.createElement("img");
   houseCrest.src = student.houseCrest;
-  houseCrest.classList.add(student.house + '-crest'); // e.g. 'gryffindor-crest'
+  houseCrest.classList.add(student.house + "-crest");
   modalContent.appendChild(houseCrest);
 
   // Add student details
-  const studentDetails = ['firstName', 'middleName', 'lastName', 'bloodStatus', 'isPrefect', 'isExpelled', 'isInquisitorialSquad'];
-  studentDetails.forEach(detail => {
-    const paragraph = document.createElement('p');
+  const studentDetails = [
+    "firstName",
+    "middleName",
+    "lastName",
+    "bloodStatus",
+    "isPrefect",
+    "isExpelled",
+    "isInquisitorialSquad",
+  ];
+  studentDetails.forEach((detail) => {
+    const paragraph = document.createElement("p");
     const readableDetail = convertCamelCaseToRegular(detail);
-    if (detail in student && student[detail]) { // Check if student has this property
-        paragraph.textContent = `${readableDetail}: ${student[detail]}`;
-    } else if (detail in student) { // If property exists but is falsy (e.g. false, null)
-        paragraph.textContent = `${readableDetail}: No`;
-    } else { // If property does not exist
-        paragraph.textContent = `${readableDetail}: Unknown`;
+    if (detail in student && student[detail]) {
+      paragraph.textContent = `${readableDetail}: ${student[detail]}`;
+    } else if (detail in student) {
+      paragraph.textContent = `${readableDetail}: No`;
+    } else {
+      paragraph.textContent = `${readableDetail}: Unknown`;
     }
     modalContent.appendChild(paragraph, modalContent.firstChild);
-});
+  });
 
-const expelButton = document.createElement('button');
-  expelButton.textContent = 'Expel';
-  expelButton.classList.add('expel-button'); // optional, if you want to add a class for styling purposes
-  expelButton.addEventListener('click', () => {
+  const expelButton = document.createElement("button");
+  expelButton.textContent = "Expel";
+  expelButton.classList.add("expel-button");
+  expelButton.addEventListener("click", () => {
     expelStudent(student);
     modal.style.display = "none"; // close the modal after expelling the student
   });
@@ -203,13 +216,13 @@ const expelButton = document.createElement('button');
 
   // Add photo if it exists
   if (student.photo) {
-    const studentPhoto = document.createElement('img');
+    const studentPhoto = document.createElement("img");
     studentPhoto.src = student.photo;
-    studentPhoto.classList.add('student-photo');  // optional, if you want to add a class for styling purposes
-    if (modalContent.firstChild) {  // if there's already an element inside modalContent
-      modalContent.insertBefore(studentPhoto, modalContent.firstChild);  // insert the photo before the first child
+    studentPhoto.classList.add("student-photo");
+    if (modalContent.firstChild) {
+      modalContent.insertBefore(studentPhoto, modalContent.firstChild);
     } else {
-      modalContent.appendChild(studentPhoto);  // if modalContent is empty, append the photo
+      modalContent.appendChild(studentPhoto);
     }
   }
 
@@ -217,11 +230,11 @@ const expelButton = document.createElement('button');
   modal.appendChild(modalContent);
 
   // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
+  window.onclick = function (event) {
     if (event.target == modal) {
       modal.style.display = "none";
     }
-  }
+  };
 
   // Append modal to body
   document.body.appendChild(modal);
@@ -238,27 +251,35 @@ function attachEventListeners() {
     const searchResults = searchStudent(query);
     displayList(searchResults);
   });
-  const houseButtons = document.querySelectorAll('.filter');
-  
-  houseButtons.forEach(button => {
-    button.addEventListener('click', event => {
+  const houseButtons = document.querySelectorAll(".filter");
+
+  houseButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
       const house = event.target.dataset.filter;
-      const filteredStudents = allStudents.filter(student => student.house.toLowerCase() === house);
+      const filteredStudents = allStudents.filter(
+        (student) => student.house.toLowerCase() === house
+      );
       displayList(filteredStudents);
     });
   });
 
-  const statusButtons = document.querySelectorAll('.filter[data-filter="enrolled"], .filter[data-filter="expelled"]');
-  
-  statusButtons.forEach(button => {
-    button.addEventListener('click', event => {
+  const statusButtons = document.querySelectorAll(
+    '.filter[data-filter="enrolled"], .filter[data-filter="expelled"]'
+  );
+
+  statusButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
       const status = event.target.dataset.filter;
       let filteredStudents;
-      
-      if (status === 'enrolled') {
-        filteredStudents = allStudents.filter(student => student.isExpelled === false);
-      } else if (status === 'expelled') {
-        filteredStudents = allStudents.filter(student => student.isExpelled === true);
+
+      if (status === "enrolled") {
+        filteredStudents = allStudents.filter(
+          (student) => student.isExpelled === false
+        );
+      } else if (status === "expelled") {
+        filteredStudents = allStudents.filter(
+          (student) => student.isExpelled === true
+        );
       }
 
       displayList(filteredStudents);
@@ -266,12 +287,12 @@ function attachEventListeners() {
   });
 }
 
-
 function capitalizeHouse(house) {
   if (!house) return null;
 
   const houseLowercase = house.toLowerCase();
-  const houseCapitalized = houseLowercase.charAt(0).toUpperCase() + houseLowercase.slice(1);
+  const houseCapitalized =
+    houseLowercase.charAt(0).toUpperCase() + houseLowercase.slice(1);
 
   return houseCapitalized;
 }
@@ -294,18 +315,21 @@ function filterByHouse(house) {
 function searchStudent(query) {
   return allStudents.filter(
     (student) =>
-      (student.firstName && student.firstName.toLowerCase().includes(query.toLowerCase())) ||
-      (student.middleName && student.middleName.toLowerCase().includes(query.toLowerCase())) ||
-      (student.nickName && student.nickName.toLowerCase().includes(query.toLowerCase())) ||
-      (student.lastName && student.lastName.toLowerCase().includes(query.toLowerCase()))
+      (student.firstName &&
+        student.firstName.toLowerCase().includes(query.toLowerCase())) ||
+      (student.middleName &&
+        student.middleName.toLowerCase().includes(query.toLowerCase())) ||
+      (student.nickName &&
+        student.nickName.toLowerCase().includes(query.toLowerCase())) ||
+      (student.lastName &&
+        student.lastName.toLowerCase().includes(query.toLowerCase()))
   );
 }
 
-
 function expelStudent(student) {
-  student.isExpelled = true; // change the student's expelled status
+  student.isExpelled = true;
   displayList(allStudents);
-  updateEnrollmentCounts(); // display the list of students, including expelled ones
+  updateEnrollmentCounts();
   /* const index = allStudents.indexOf(student);
   if (index > -1) {
     allStudents.splice(index, 1);
@@ -316,24 +340,27 @@ function expelStudent(student) {
 }
 
 function updateHouseCounts() {
-  const houses = ['Gryffindor', 'Slytherin', 'Ravenclaw', 'Hufflepuff'];
-  houses.forEach(house => {
-    const count = allStudents.filter(student => student.house === house).length;
+  const houses = ["Gryffindor", "Slytherin", "Ravenclaw", "Hufflepuff"];
+  houses.forEach((house) => {
+    const count = allStudents.filter(
+      (student) => student.house === house
+    ).length;
     document.querySelector(`#${house.toLowerCase()}-count`).textContent = count;
   });
 }
 
 function updateEnrollmentCounts() {
-  const enrolledCount = allStudents.filter(student => student.isExpelled === false).length;
-  const expelledCount = allStudents.filter(student => student.isExpelled === true).length;
+  const enrolledCount = allStudents.filter(
+    (student) => student.isExpelled === false
+  ).length;
+  const expelledCount = allStudents.filter(
+    (student) => student.isExpelled === true
+  ).length;
 
   document.querySelector("#enrolled-count").textContent = enrolledCount;
   document.querySelector("#expelled-count").textContent = expelledCount;
 }
 
 function filterStudentsByHouse(house) {
-  return allStudents.filter(student => student.house === house);
+  return allStudents.filter((student) => student.house === house);
 }
-
-
-
